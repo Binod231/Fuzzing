@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="640" viewBox="0 0 1200 640" font-family="Inter, 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#232F3E"/></marker>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#DD344C"/></marker>
+  </defs>
+  <rect width="1200" height="640" fill="#ffffff"/>
+  <rect width="1200" height="56" fill="#232F3E"/>
+  <text x="24" y="35" fill="#fff" font-size="21" font-weight="700">What oidcfuzz tests: the GitHub → AWS OIDC handshake, replayed 48 ways per policy</text>
+
+  <!-- GitHub boundary -->
+  <rect x="24" y="84" width="300" height="300" rx="6" fill="none" stroke="#6B7785" stroke-width="2" stroke-dasharray="8 6"/>
+  <text x="38" y="108" font-size="14" font-weight="700" fill="#232F3E">GitHub</text>
+  <rect x="48" y="130" width="252" height="86" rx="8" fill="#F2F3F3" stroke="#232F3E" stroke-width="1.5"/>
+  <rect x="60" y="146" width="34" height="34" rx="4" fill="#24292F"/><text x="77" y="169" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">GH</text>
+  <text x="106" y="158" font-size="14" font-weight="700" fill="#232F3E">Actions job</text>
+  <text x="106" y="177" font-size="12" fill="#545B64">permissions: id-token: write</text>
+  <text x="60" y="203" font-size="12" fill="#545B64">repo, branch / tag / PR / environment</text>
+  <rect x="48" y="262" width="252" height="96" rx="8" fill="#FFF" stroke="#232F3E" stroke-width="1.5"/>
+  <text x="60" y="284" font-size="14" font-weight="700" fill="#232F3E">OIDC token (JWT)</text>
+  <text x="60" y="306" font-size="12" font-family="monospace" fill="#232F3E">aud: sts.amazonaws.com</text>
+  <text x="60" y="324" font-size="11" font-family="monospace" fill="#232F3E">sub: repo:acme/payments:</text>
+  <text x="60" y="340" font-size="11" font-family="monospace" fill="#232F3E">       ref:refs/heads/main</text>
+  <path d="M174 216 V260" stroke="#232F3E" stroke-width="2" marker-end="url(#a)"/>
+  <circle cx="190" cy="238" r="11" fill="#232F3E"/><text x="190" y="242" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">1</text>
+
+  <!-- AWS boundary -->
+  <rect x="400" y="84" width="776" height="300" rx="6" fill="none" stroke="#232F3E" stroke-width="2" stroke-dasharray="8 6"/>
+  <text x="414" y="108" font-size="14" font-weight="700" fill="#232F3E">AWS account</text>
+  <rect x="424" y="140" width="210" height="84" rx="8" fill="#FFF" stroke="#DD344C" stroke-width="2"/>
+  <rect x="436" y="156" width="34" height="34" rx="4" fill="#DD344C"/><text x="453" y="178" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">STS</text>
+  <text x="480" y="170" font-size="14" font-weight="700" fill="#232F3E">AssumeRole</text>
+  <text x="480" y="188" font-size="14" font-weight="700" fill="#232F3E">WithWebIdentity</text>
+  <text x="436" y="212" font-size="11.5" fill="#545B64">validates token, then the role</text>
+  <rect x="690" y="140" width="210" height="84" rx="8" fill="#FFF" stroke="#DD344C" stroke-width="2"/>
+  <rect x="702" y="156" width="34" height="34" rx="4" fill="#DD344C"/><text x="719" y="178" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">IAM</text>
+  <text x="746" y="170" font-size="14" font-weight="700" fill="#232F3E">OIDC provider</text>
+  <text x="746" y="188" font-size="12" fill="#545B64">token.actions.</text>
+  <text x="702" y="212" font-size="11.5" fill="#545B64">githubusercontent.com</text>
+  <rect x="424" y="262" width="476" height="100" rx="8" fill="#FFF8F8" stroke="#DD344C" stroke-width="2.5"/>
+  <rect x="436" y="278" width="34" height="34" rx="4" fill="#DD344C"/><text x="453" y="300" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">IAM</text>
+  <text x="480" y="294" font-size="14" font-weight="700" fill="#232F3E">Role trust policy  ← the thing under test</text>
+  <text x="436" y="334" font-size="11.5" font-family="monospace" fill="#232F3E">StringLike  { "…:sub": "repo:acme/payments*" }</text>
+  <text x="436" y="352" font-size="11.5" font-family="monospace" fill="#232F3E">StringEquals{ "…:aud": "sts.amazonaws.com" }</text>
+  <path d="M300 310 H340 V182 H420" fill="none" stroke="#232F3E" stroke-width="2" marker-end="url(#a)"/>
+  <circle cx="340" cy="246" r="11" fill="#232F3E"/><text x="340" y="250" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">2</text>
+  <path d="M634 182 H686" stroke="#232F3E" stroke-width="2" marker-end="url(#a)"/>
+  <path d="M529 224 V258" stroke="#232F3E" stroke-width="2" marker-end="url(#a)"/>
+  <circle cx="548" cy="242" r="11" fill="#232F3E"/><text x="548" y="246" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">3</text>
+  <rect x="940" y="140" width="212" height="222" rx="8" fill="#F2F3F3" stroke="#6B7785" stroke-width="1.5"/>
+  <text x="954" y="164" font-size="13" font-weight="700" fill="#232F3E">Outcome</text>
+  <text x="954" y="190" font-size="12" fill="#0a7a1a">✓ short-lived credentials</text>
+  <text x="954" y="212" font-size="12" fill="#B3261E">✗ AccessDenied</text>
+  <text x="954" y="244" font-size="11.5" fill="#545B64">Wrong in either direction</text>
+  <text x="954" y="260" font-size="11.5" fill="#545B64">is expensive:</text>
+  <text x="954" y="284" font-size="11.5" fill="#B3261E">accepted but unintended</text>
+  <text x="954" y="300" font-size="11.5" fill="#B3261E">= over-granted role</text>
+  <text x="954" y="324" font-size="11.5" fill="#B26A00">rejected but intended</text>
+  <text x="954" y="340" font-size="11.5" fill="#B26A00">= broken pipeline</text>
+  <path d="M900 312 H936" stroke="#232F3E" stroke-width="2" marker-end="url(#a)"/>
+
+  <!-- oidcfuzz boundary -->
+  <rect x="24" y="420" width="1152" height="196" rx="6" fill="none" stroke="#3B48CC" stroke-width="2" stroke-dasharray="8 6"/>
+  <text x="38" y="444" font-size="14" font-weight="700" fill="#3B48CC">oidcfuzz (this post): no AWS credentials needed, runs offline, about 0.06 s for all nine policies</text>
+  <g font-size="12.5">
+    <rect x="48" y="464" width="240" height="124" rx="8" fill="#fff" stroke="#3B48CC" stroke-width="2"/>
+    <text x="62" y="488" font-weight="700" fill="#232F3E">claims.py</text>
+    <text x="62" y="508" fill="#545B64">8 repo identities ×</text>
+    <text x="62" y="526" fill="#545B64">6 job contexts = 48 subs</text>
+    <text x="62" y="548" fill="#545B64">legacy + immutable format,</text>
+    <text x="62" y="566" fill="#545B64">':' → '%3A' encoding</text>
+    <rect x="344" y="464" width="240" height="124" rx="8" fill="#fff" stroke="#3B48CC" stroke-width="2"/>
+    <text x="358" y="488" font-weight="700" fill="#232F3E">iam.py</text>
+    <text x="358" y="508" fill="#545B64">Condition evaluator:</text>
+    <text x="358" y="526" fill="#545B64">AND keys, OR values,</text>
+    <text x="358" y="548" fill="#545B64">* and ? capture groups</text>
+    <text x="358" y="566" fill="#545B64">show what '*' swallowed</text>
+    <rect x="640" y="464" width="240" height="124" rx="8" fill="#fff" stroke="#3B48CC" stroke-width="2"/>
+    <text x="654" y="488" font-weight="700" fill="#232F3E">analyze.py + lint.py</text>
+    <text x="654" y="508" fill="#545B64">compare verdict to intent:</text>
+    <text x="654" y="526" fill="#545B64">ALLOW_OK · DENY_OK</text>
+    <text x="654" y="548" fill="#545B64">OVERREACH · OUTAGE</text>
+    <text x="654" y="566" fill="#545B64">+ static cross-check</text>
+    <rect x="936" y="464" width="216" height="124" rx="8" fill="#fff" stroke="#3B48CC" stroke-width="2"/>
+    <text x="950" y="488" font-weight="700" fill="#232F3E">report</text>
+    <text x="950" y="508" fill="#545B64">per-policy verdict grid,</text>
+    <text x="950" y="526" fill="#545B64">before / after migration</text>
+    <text x="950" y="548" fill="#545B64">counts, exit code for CI</text>
+  </g>
+  <path d="M288 526 H340" stroke="#3B48CC" stroke-width="2" marker-end="url(#a)"/>
+  <path d="M584 526 H636" stroke="#3B48CC" stroke-width="2" marker-end="url(#a)"/>
+  <path d="M880 526 H932" stroke="#3B48CC" stroke-width="2" marker-end="url(#a)"/>
+  <path d="M662 462 C 662 420, 560 400, 560 366" fill="none" stroke="#DD344C" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#ar)"/>
+  <text x="676" y="412" font-size="11.5" fill="#DD344C">reads the same JSON policy you would deploy</text>
+</svg>

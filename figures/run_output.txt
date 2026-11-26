@@ -1,0 +1,49 @@
+
+== P3_name_prefix
+   accepted-as-intended 2 | OVERREACH 16 | OUTAGE 2 | correctly-denied 28  (of 48 tokens)
+   lint CRITICAL WILDCARD_IN_IDENTITY: wildcard inside OWNER/REPO: it can swallow a longer owner or repo name (acme-labs, payments-sandbox) and even the ':' separator
+   lint WARN     LEGACY_FORMAT_ONLY: only matches the legacy sub format; the same repo stops matching after a rename/transfer or when the immutable format is enabled (fails closed: outage)
+   !! OVERREACH repo:acme/payments:ref:refs/heads/feature/login
+        pattern repo:acme/payments*  ->  *=':ref:refs/heads/feature/login'
+   !! OVERREACH repo:acme/payments:ref:refs/tags/v1.2.0
+        pattern repo:acme/payments*  ->  *=':ref:refs/tags/v1.2.0'
+   !! OVERREACH repo:acme/payments:pull_request
+        pattern repo:acme/payments*  ->  *=':pull_request'
+   !! OVERREACH repo:acme/payments:environment:prod-debug
+        pattern repo:acme/payments*  ->  *=':environment:prod-debug'
+   xx OUTAGE    repo:acme@1001/payments@2002:ref:refs/heads/main
+   xx OUTAGE    repo:acme@1001/payments@2002:environment:prod
+   !! OVERREACH repo:acme/payments-sandbox:ref:refs/heads/main
+        pattern repo:acme/payments*  ->  *='-sandbox:ref:refs/heads/main'
+   !! OVERREACH repo:acme/payments-sandbox:ref:refs/heads/feature/login
+        pattern repo:acme/payments*  ->  *='-sandbox:ref:refs/heads/feature/login'
+   !! OVERREACH repo:acme/payments-sandbox:ref:refs/tags/v1.2.0
+        pattern repo:acme/payments*  ->  *='-sandbox:ref:refs/tags/v1.2.0'
+   !! OVERREACH repo:acme/payments-sandbox:pull_request
+        pattern repo:acme/payments*  ->  *='-sandbox:pull_request'
+   !! OVERREACH repo:acme/payments-sandbox:environment:prod
+        pattern repo:acme/payments*  ->  *='-sandbox:environment:prod'
+   !! OVERREACH repo:acme/payments-sandbox:environment:prod-debug
+        pattern repo:acme/payments*  ->  *='-sandbox:environment:prod-debug'
+   !! OVERREACH repo:acme/payments:ref:refs/heads/main
+        pattern repo:acme/payments*  ->  *=':ref:refs/heads/main'
+   !! OVERREACH repo:acme/payments:ref:refs/heads/feature/login
+        pattern repo:acme/payments*  ->  *=':ref:refs/heads/feature/login'
+   !! OVERREACH repo:acme/payments:ref:refs/tags/v1.2.0
+        pattern repo:acme/payments*  ->  *=':ref:refs/tags/v1.2.0'
+   !! OVERREACH repo:acme/payments:pull_request
+        pattern repo:acme/payments*  ->  *=':pull_request'
+   !! OVERREACH repo:acme/payments:environment:prod
+        pattern repo:acme/payments*  ->  *=':environment:prod'
+   !! OVERREACH repo:acme/payments:environment:prod-debug
+        pattern repo:acme/payments*  ->  *=':environment:prod-debug'
+
+== P5_exact_legacy
+   accepted-as-intended 2 | OVERREACH 2 | OUTAGE 2 | correctly-denied 42  (of 48 tokens)
+   lint WARN     LEGACY_FORMAT_ONLY: only matches the legacy sub format; the same repo stops matching after a rename/transfer or when the immutable format is enabled (fails closed: outage)
+   xx OUTAGE    repo:acme@1001/payments@2002:ref:refs/heads/main
+   xx OUTAGE    repo:acme@1001/payments@2002:environment:prod
+   !! OVERREACH repo:acme/payments:ref:refs/heads/main
+        matched exactly: repo:acme/payments:ref:refs/heads/main
+   !! OVERREACH repo:acme/payments:environment:prod
+        matched exactly: repo:acme/payments:environment:prod
