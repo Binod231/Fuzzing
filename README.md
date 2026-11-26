@@ -1,4 +1,4 @@
-# 🔐 oidcfuzz — Fuzz Your GitHub Actions → AWS OIDC Trust Policies Before Attackers Do
+# oidcfuzz — Fuzz Your GitHub Actions → AWS OIDC Trust Policies Before Attackers Do
 
 ![Architecture: how oidcfuzz throws 48 synthetic OIDC tokens at your trust policy](figures/fig1_architecture.png)
 
@@ -12,7 +12,7 @@
 
 ---
 
-## 🎯 Why This Exists
+## Why This Exists
 
 GitHub Actions OIDC federation with AWS (`aws-actions/configure-aws-credentials`) is the standard way to deploy without long-lived secrets. But the trust policy's `Condition` block is **the entire authorization boundary**, and the patterns people copy from blog posts are almost always wrong:
 
@@ -28,7 +28,7 @@ GitHub Actions OIDC federation with AWS (`aws-actions/configure-aws-credentials`
 
 ---
 
-## ⚡ Quickstart
+## Quickstart
 
 ```bash
 # Clone & run (zero dependencies beyond Python 3.11+)
@@ -58,7 +58,7 @@ Exit codes: `0` = clean, `1` = broken pipeline (outage), `2` = security hole (ov
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ```
  8 identities × 6 contexts = 48 synthetic OIDC tokens
@@ -81,14 +81,14 @@ Exit codes: `0` = clean, `1` = broken pipeline (outage), `2` = security hole (ov
 
 | # | Identity | Role | Why it matters |
 |---|----------|------|---------------|
-| 1 | `acme/payments` (legacy sub) | ✅ Legit | The real repo, pre-migration |
-| 2 | `acme/payments` (immutable sub) | ✅ Legit | The same repo after opting into immutable subjects |
-| 3 | `acme/payments-sandbox` | ⚠️ Other | Sibling repo — catches `payments*` patterns |
-| 4 | `acme/marketing-site` | ⚠️ Other | Different repo in same org — catches `acme/*` |
-| 5 | `acme-labs/payments` | 🔴 Attacker | Different org, same repo name — catches `*payments*` |
-| 6 | `mallory/payments` | 🔴 Attacker | External actor who forks/names a repo `payments` |
-| 7 | Stranger holds `acme/payments` (legacy) | 🔴 Attacker | Namespace recycling: someone registers the freed name |
-| 8 | Re-registered `acme/payments` (post-cutoff) | 🔴 Attacker | Same, but after July 2026 — gets immutable sub with *new* IDs |
+| 1 | `acme/payments` (legacy sub) | Legit | The real repo, pre-migration |
+| 2 | `acme/payments` (immutable sub) | Legit | The same repo after opting into immutable subjects |
+| 3 | `acme/payments-sandbox` | Other | Sibling repo — catches `payments*` patterns |
+| 4 | `acme/marketing-site` | Other | Different repo in same org — catches `acme/*` |
+| 5 | `acme-labs/payments` | Attacker | Different org, same repo name — catches `*payments*` |
+| 6 | `mallory/payments` | Attacker | External actor who forks/names a repo `payments` |
+| 7 | Stranger holds `acme/payments` (legacy) | Attacker | Namespace recycling: someone registers the freed name |
+| 8 | Re-registered `acme/payments` (post-cutoff) | Attacker | Same, but after July 2026 — gets immutable sub with *new* IDs |
 
 ### The 6 Contexts
 
@@ -96,7 +96,7 @@ Exit codes: `0` = clean, `1` = broken pipeline (outage), `2` = security hole (ov
 
 ---
 
-## 📊 The Verdict Grid
+## The Verdict Grid
 
 ![Small-multiples heatmap of 9 policies × 48 scenarios](figures/fig2_verdict_grid.png)
 
@@ -104,7 +104,7 @@ Each cell is one (identity, context) pair. **Green ✓** = accepted as intended.
 
 ---
 
-## 🔍 The IAM Evaluator
+## The IAM Evaluator
 
 ![Source code of the IAM condition evaluator with capture groups](figures/fig3_code_evaluator.png)
 
@@ -139,7 +139,7 @@ The `*` after `payments` swallowed `-sandbox:pull_request` — it crossed the `:
 
 ---
 
-## 📏 Trust Policy Quota Analysis
+## Trust Policy Quota Analysis
 
 ![Chart showing policy length vs number of repos](figures/fig5_quota.png)
 
@@ -151,7 +151,7 @@ python -m oidcfuzz quota
 
 ---
 
-## 🧪 The Test Suite
+## The Test Suite
 
 ```bash
 pip install pytest
@@ -167,25 +167,25 @@ pytest tests/ -v
 
 ---
 
-## 🛡️ The Policy Gallery
+## The Policy Gallery
 
 Nine real-world patterns, from copy-paste disasters to hardened best practices:
 
 | Policy | Pattern | Verdict |
 |--------|---------|---------|
-| **P1** `repo_wildcard` | `repo:acme/payments:*` | ⚠️ Any branch/tag/PR/env |
-| **P2** `org_wide` | `repo:acme/*` | 🔴 Every repo in the org |
-| **P3** `name_prefix` | `repo:acme/payments*` | 🔴 Crosses `:` into other repos |
-| **P4** `any_branch` | `repo:acme/payments:ref:refs/heads/*` | ⚠️ Any branch gets the role |
-| **P5** `exact_legacy` | `StringEquals` with legacy subs | ⚠️ Breaks on rename; vulnerable to namespace recycling |
-| **P6** `exact_immutable` | `StringEquals` with `@id` subs | ✅ **Only clean policy after migration** |
-| **P7** `exact_dual_format` | Both legacy + immutable subs | ✅ No outage, but ⚠️ legacy half is recyclable |
-| **P8** `org_prefix` | `repo:acme*/payments:*` | 🔴 Matches `acme-labs` |
-| **P9** `no_sub_condition` | No `sub` check at all | 🔴 **Any repo on GitHub** |
+| **P1** `repo_wildcard` | `repo:acme/payments:*` | WARN — Any branch/tag/PR/env |
+| **P2** `org_wide` | `repo:acme/*` | CRITICAL — Every repo in the org |
+| **P3** `name_prefix` | `repo:acme/payments*` | CRITICAL — Crosses `:` into other repos |
+| **P4** `any_branch` | `repo:acme/payments:ref:refs/heads/*` | WARN — Any branch gets the role |
+| **P5** `exact_legacy` | `StringEquals` with legacy subs | WARN — Breaks on rename; vulnerable to namespace recycling |
+| **P6** `exact_immutable` | `StringEquals` with `@id` subs | CLEAN — **Only clean policy after migration** |
+| **P7** `exact_dual_format` | Both legacy + immutable subs | CLEAN — No outage, but legacy half is recyclable |
+| **P8** `org_prefix` | `repo:acme*/payments:*` | CRITICAL — Matches `acme-labs` |
+| **P9** `no_sub_condition` | No `sub` check at all | CRITICAL — **Any repo on GitHub** |
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 oidc-fuzz/
@@ -208,7 +208,7 @@ oidc-fuzz/
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork it
 2. Add a new policy to `make_policies.py` and re-run `python make_policies.py`
@@ -217,7 +217,7 @@ oidc-fuzz/
 
 ---
 
-## 📄 License
+## License
 
 MIT — use it, audit your trust policies, stay safe.
 
