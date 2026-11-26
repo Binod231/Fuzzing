@@ -1,8 +1,6 @@
 # 🔐 oidcfuzz — Fuzz Your GitHub Actions → AWS OIDC Trust Policies Before Attackers Do
 
-<p align="center">
-  <img src="figures/fig1_architecture.png" alt="Architecture: how oidcfuzz throws 48 synthetic OIDC tokens at your trust policy" width="720"/>
-</p>
+![Architecture: how oidcfuzz throws 48 synthetic OIDC tokens at your trust policy](figures/fig1_architecture.png)
 
 > **One misplaced wildcard in an IAM trust policy can hand your production AWS role to any repository on GitHub.**
 >
@@ -43,9 +41,7 @@ python -m oidcfuzz analyze policies/*.json
 python -m oidcfuzz analyze -v policies/P3_name_prefix.json
 ```
 
-<p align="center">
-  <img src="figures/fig4_terminal.png" alt="Terminal output showing OVERREACH and OUTAGE findings" width="700"/>
-</p>
+![Terminal output showing OVERREACH and OUTAGE findings](figures/fig4_terminal.png)
 
 ### Fuzz Your Own Policy
 
@@ -102,9 +98,7 @@ Exit codes: `0` = clean, `1` = broken pipeline (outage), `2` = security hole (ov
 
 ## 📊 The Verdict Grid
 
-<p align="center">
-  <img src="figures/fig2_verdict_grid.png" alt="Small-multiples heatmap of 9 policies × 48 scenarios" width="800"/>
-</p>
+![Small-multiples heatmap of 9 policies × 48 scenarios](figures/fig2_verdict_grid.png)
 
 Each cell is one (identity, context) pair. **Green ✓** = accepted as intended. **Red !** = accepted but NOT intended (security hole). **Orange ×** = rejected but should have been accepted (broken pipeline). **Grey** = correctly denied.
 
@@ -112,9 +106,7 @@ Each cell is one (identity, context) pair. **Green ✓** = accepted as intended.
 
 ## 🔍 The IAM Evaluator
 
-<p align="center">
-  <img src="figures/fig3_code_evaluator.png" alt="Source code of the IAM condition evaluator with capture groups" width="700"/>
-</p>
+![Source code of the IAM condition evaluator with capture groups](figures/fig3_code_evaluator.png)
 
 The core insight: compile each `StringLike` pattern to a **regex with capture groups**, so the trace can show exactly what `*` swallowed:
 
@@ -149,9 +141,7 @@ The `*` after `payments` swallowed `-sandbox:pull_request` — it crossed the `:
 
 ## 📏 Trust Policy Quota Analysis
 
-<p align="center">
-  <img src="figures/fig5_quota.png" alt="Chart showing policy length vs number of repos" width="600"/>
-</p>
+![Chart showing policy length vs number of repos](figures/fig5_quota.png)
 
 AWS trust policies have a **2,048-character default limit** (raisable to 8,192). The dual-format exact-match policy hits the default limit at just **10 repositories**. The `quota` command visualises this:
 
